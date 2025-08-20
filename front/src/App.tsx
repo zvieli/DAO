@@ -1,51 +1,76 @@
-// src/App.tsx
-import { useState, useEffect } from "react";
-import { ethers } from "ethers";
-import DAOJson from "../artifacts/contracts/DAO.sol/DAO.json";
-
 declare global {
   interface Window {
     ethereum?: any;
   }
 }
 
+import { useState, useEffect } from "react";
+import { ethers } from "ethers";
+import DAOJson from "./contracts/DAO.json";
+
+interface Proposal {
+  id: number;
+  title: string;
+  description: string;
+  votesFor: number;
+  votesAgainst: number;
+  isOpen: boolean;
+  createdAt: number;
+  creator: string;
+}
+
 function App() {
-  const [provider, setProvider] = useState<ethers.BrowserProvider | null>(null);
-  const [signer, setSigner] = useState<ethers.JsonRpcSigner | null>(null);
-  const [daoContract, setDaoContract] = useState<ethers.Contract | null>(null);
-  const [userAddress, setUserAddress] = useState<string>("");
+  const [dao, setDao] = useState<ethers.Contract | null>(null);
+  const [account, setAccount] = useState<string>("");
+  const [proposals, setProposals] = useState<Proposal[]>([]);
+
+  const connectWallet = async () => {
+    if (!window.ethereum) return alert("Install MetaMask!");
+    const provider = new ethers.BrowserProvider(window.ethereum);
+    const signer = await provider.getSigner();
+    const _account = await signer.getAddress();
+    setAccount(_account);
+
+    const daoContract = new ethers.Contract(DAOJson.address, DAOJson.abi, signer);
+    setDao(daoContract);
+  };
+
+  const fetchProposals = async () => {
+    if (!dao) return;
+    const count = await dao.getProposalsCount();
+    const arr: Proposal[] = [];
+    for (let i = 1; i <= Number(count); i++) {
+      const p = await dao.proposals(i - 1);
+      arr.push({
+        id: Number(p.id),
+        title: p.title,
+        description: p.description,
+        votesFor: Number(p.votesFor),
+        votesAgainst: Number(p.votesAgainst),
+        isOpen: p.isOpen,
+        createdAt: Number(p.createdAt),
+        creator: p.creator,
+      });
+    }
+    setProposals(arr);
+  };
 
   useEffect(() => {
-    const init = async () => {
-      if (window.ethereum) {
-        const browserProvider = new ethers.BrowserProvider(window.ethereum);
-        setProvider(browserProvider);
-
-        const signer = await browserProvider.getSigner();
-        setSigner(signer);
-
-        const address = await signer.getAddress();
-        setUserAddress(address);
-
-        const dao = new ethers.Contract(
-          "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512", // כתובת החוזה מהדיפלוי
-          DAOJson.abi,
-          signer
-        );
-        setDaoContract(dao);
-      } else {
-        alert("אנא התקן MetaMask!");
-      }
-    };
-
-    init();
-  }, []);
+    if (dao) fetchProposals();
+  }, [dao]);
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>DAO Frontend</h1>
-      {userAddress && <p>מחובר עם כתובת: {userAddress}</p>}
-      {daoContract && <p>חוזה מחובר בכתובת: {String(daoContract.target)}</p>}
+    <div>
+      {!account ? <button onClick={connectWallet}>Connect Wallet</button> : <div>Connected: {account}</div>}
+      <h1>Proposals</h1>
+      {proposals.map((p) => (
+        <div key={p.id}>
+          <h3>{p.title}</h3>
+          <p>{p.description}</p>
+          <p>Votes For: {p.votesFor} | Votes Against: {p.votesAgainst}</p>
+          <p>Status: {p.isOpen ? "Open" : "Closed"}</p>
+        </div>
+      ))}
     </div>
   );
 }

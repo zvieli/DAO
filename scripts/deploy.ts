@@ -17,19 +17,28 @@ async function main() {
   // יוצרים מופע של החוזה
   const DAOFactory = await ethers.getContractFactory("DAO");
   const dao = await DAOFactory.deploy();
+  await dao.waitForDeployment();
 
   console.log("DAO deployed at:", dao.target);
 
-  // שמירת כתובת החוזה ל־JSON
-  const contractsDir = path.join(__dirname, "deployedContracts");
+  // מיקום הקובץ לפרונט
+  const contractsDir = path.join(__dirname, "../front/src/contracts");
   if (!fs.existsSync(contractsDir)) {
-    fs.mkdirSync(contractsDir);
+    fs.mkdirSync(contractsDir, { recursive: true });
   }
+
+  // JSON עם כתובת + ABI
+  const daoJson = {
+    address: dao.target,
+    abi: JSON.parse(DAOFactory.interface.formatJson())
+  };
 
   fs.writeFileSync(
     path.join(contractsDir, "DAO.json"),
-    JSON.stringify({ address: dao.target }, null, 2)
+    JSON.stringify(daoJson, null, 2)
   );
+
+  console.log("Contract ABI + address saved to front/src/contracts/DAO.json");
 }
 
 main().catch((error) => {
