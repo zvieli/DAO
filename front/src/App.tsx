@@ -1,3 +1,12 @@
+declare global {
+  interface Window {
+    ethereum?: {
+      request: (args: { method: string; params?: any[] }) => Promise<any>;
+      on: (event: string, callback: (...args: any[]) => void) => void;
+      removeListener: (event: string, callback: (...args: any[]) => void) => void;
+    };
+  }
+}
 import { useState, useEffect } from "react";
 import { ethers } from "ethers";
 import DAOJson from "./contracts/DAO.json";
@@ -24,7 +33,6 @@ function App() {
   const [isConnecting, setIsConnecting] = useState(false);
   const [activeTab, setActiveTab] = useState<"proposals" | "create">("proposals");
 
-  // קבלת גישה למטאמאסק
   const requestAccountAccess = async (forceNewPermission = false) => {
     if (!window.ethereum) {
       alert("Please install MetaMask!");
@@ -80,7 +88,6 @@ function App() {
     }
   };
 
-  // חיבור/החלפת חשבון
   const connectOrSwitchWallet = async (forceSwitch: boolean = false) => {
     const result = await requestAccountAccess(forceSwitch);
     if (result) {
@@ -91,7 +98,6 @@ function App() {
     }
   };
 
-  // ביצוע פעולה
   const executeWithCurrentAccount = async (action: (signer: ethers.Signer) => Promise<any>) => {
     if (!provider || !account) {
       await connectOrSwitchWallet();
@@ -120,7 +126,6 @@ function App() {
     }
   };
 
-  // קבלת הצעות
   const fetchProposals = async () => {
     if (!dao) return;
     try {
@@ -145,7 +150,6 @@ function App() {
     }
   };
 
-  // יצירת הצעה
   const createProposal = async () => {
     if (!newTitle || !newDescription) {
       alert("Please fill both title and description!");
@@ -163,7 +167,6 @@ function App() {
     });
   };
 
-  // הצבעה
   const voteProposal = async (id: number, support: boolean) => {
     await executeWithCurrentAccount(async (signer) => {
       const daoContract = new ethers.Contract(DAOJson.address, DAOJson.abi, signer);
@@ -173,7 +176,6 @@ function App() {
     });
   };
 
-  // ניתוק
   const disconnectWallet = () => {
     setAccount("");
     setDao(null);
@@ -181,25 +183,34 @@ function App() {
     setProposals([]);
   };
 
-  // אפקטים
   useEffect(() => {
-    if (window.ethereum) {
-      const handleAccountsChanged = async (accounts: string[]) => {
-        if (accounts.length === 0) disconnectWallet();
-      };
-      const handleChainChanged = () => window.location.reload();
+  const ethereum = window.ethereum;
+  if (!ethereum) return;
 
-      window.ethereum.on('accountsChanged', handleAccountsChanged);
-      window.ethereum.on('chainChanged', handleChainChanged);
-
-      return () => {
-        if (window.ethereum.removeListener) {
-          window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
-          window.ethereum.removeListener('chainChanged', handleChainChanged);
-        }
-      };
+  const handleAccountsChanged = async (accounts: string[]) => {
+    if (accounts.length === 0) {
+      // ניתוק ישיר כאן בלי להסתמך על פונקציה חיצונית
+      setAccount("");
+      setDao(null);
+      setProvider(null);
+      setProposals([]);
     }
-  }, []);
+  };
+
+  const handleChainChanged = () => {
+    window.location.reload();
+  };
+
+  ethereum.on('accountsChanged', handleAccountsChanged);
+  ethereum.on('chainChanged', handleChainChanged);
+
+  return () => {
+    if (ethereum.removeListener) {
+      ethereum.removeListener('accountsChanged', handleAccountsChanged);
+      ethereum.removeListener('chainChanged', handleChainChanged);
+    }
+  };
+}, []); // empty dependencies - הכי בטוח
 
   useEffect(() => {
     if (dao) fetchProposals();
