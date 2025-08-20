@@ -1,42 +1,296 @@
-#root {
-  max-width: 1280px;
+/* Reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  line-height: 1.6;
+  color: #1e293b;
+  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  min-height: 100vh;
+  font-size: 18px;
+  display: flex;
+  justify-content: center; /* ממרכז את כל התוכן */
+  align-items: flex-start;
+}
+
+/* Container styles - ממרכז את הכל */
+.app-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+/* Header styles - רחב וממורכז */
+.header {
+  background-color: white;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.08);
+  border-bottom: 2px solid #e2e8f0;
+  width: 100%;
+  padding: 0;
+  display: flex;
+  justify-content: center; /* ממרכז */
+}
+
+.header-content {
+  width: 100%;
+  max-width: 1400px; /* הגבלת רוחב מקסימלי */
   margin: 0 auto;
-  padding: 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 90px;
+  gap: 2rem;
+  padding: 0 2rem;
+}
+
+/* Main content - ממורכז עם רוחב מלא */
+.main-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1400px; /* הגבלת רוחב מקסימלי */
+  margin: 0 auto;
+  padding: 3rem 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* ממרכז את התוכן */
+}
+
+/* Hero section - ממורכז */
+.hero-section {
+  text-align: center;
+  padding: 4rem 2rem;
+  width: 100%;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Feature grid - ממורכז */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2.5rem;
+  margin-top: 4rem;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Tab container - ממורכז */
+.tab-container {
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  margin-bottom: 3rem;
+  overflow: hidden;
+  border: 2px solid #f1f5f9;
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Proposals grid - ממורכז */
+.proposals-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+  gap: 2.5rem;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1rem;
+  justify-content: center; /* ממרכז את הקלפים */
+}
+
+/* Form container - ממורכז */
+.form-container {
+  padding: 3rem;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Empty state - ממורכז */
+.empty-state {
+  text-align: center;
+  padding: 4rem 3rem;
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-radius: 16px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border: 2px solid #f1f5f9;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* Footer - ממורכז */
+.footer {
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  border-top: 2px solid #e2e8f0;
+  padding: 2.5rem 2rem;
+  margin-top: 5rem;
+  width: 100%;
+  display: flex;
+  justify-content: center; /* ממרכז */
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+  color: #64748b;
+  font-size: 1.1rem;
+  width: 100%;
+}
+
+/* Utility classes for centering */
+.center-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+.content-wrapper {
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+/* Ensure all direct children are centered */
+.app-container > * {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+/* Header specific centering */
+.header > .header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1400px;
+}
+
+/* Main content specific centering */
+.main-content > * {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Force centering for all grid items */
+.proposals-grid > * {
+  justify-self: center; /* ממרכז כל קלף */
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .header-content {
+    padding: 0 1.5rem;
+  }
+  
+  .main-content {
+    padding: 2rem 1rem;
+  }
+  
+  .proposals-grid {
+    grid-template-columns: 1fr;
+    padding: 0;
+  }
+  
+  .hero-section {
+    padding: 2rem 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 0;
+  }
+  
+  .header-content {
+    padding: 0 1rem;
+  }
+  
+  .main-content {
+    padding: 1rem 0.5rem;
+  }
+  
+  .feature-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    padding: 0 0.5rem;
+  }
+}
+
+/* Additional centering fixes */
+.tab-header {
+  display: flex;
+  justify-content: center; /* ממרכז את הטאבים */
+}
+
+.tab-button {
+  flex: 1;
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+/* Ensure buttons are properly centered */
+.btn {
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
+/* Center the connect wallet button specifically */
+.header-content > .btn {
+  margin: 0 auto;
+}
+
+/* Center the account info when connected */
+.header-content > .flex {
+  justify-content: center;
+  width: auto;
+}
+
+/* Mobile menu centering */
+@media (max-width: 640px) {
+  .header-content {
+    flex-direction: column;
+    height: auto;
+    padding: 1rem;
+    gap: 1rem;
   }
-  to {
-    transform: rotate(360deg);
+  
+  .logo {
+    justify-content: center;
+  }
+  
+  .header-content > .flex {
+    justify-content: center;
+    width: 100%;
   }
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
+/* Final fix for body alignment */
+html, body {
+  width: 100%;
+  overflow-x: hidden;
 }
 
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
+#root {
+  width: 100%;
+  display: flex;
+  justify-content: center;
 }
