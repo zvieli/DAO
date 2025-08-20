@@ -2,7 +2,6 @@ import { expect } from "chai";
 import { network } from "hardhat";
 
 const { ethers } = await network.connect();
-import { Contract } from "ethers";
 
 describe("DAO Contract", function () {
   let dao: any;
