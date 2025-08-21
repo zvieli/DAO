@@ -67,8 +67,12 @@ function App() {
       }
 
       const _provider = new ethers.BrowserProvider(window.ethereum);
+      console.log(_provider)
       const signer = await _provider.getSigner();
+            console.log(signer)
+
       const selectedAccount = await signer.getAddress();
+      console.log(selectedAccount)
 
       return { provider: _provider, signer, account: selectedAccount };
     } catch (error: any) {
@@ -231,12 +235,23 @@ function App() {
           {account ? (
             <div className="flex items-center gap-3">
               <div className="account-badge">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor">
                   <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                   <circle cx="12" cy="7" r="4"/>
                 </svg>
-                <span>{account.substring(0, 6)}...{account.substring(account.length - 4)}</span>
-              </div>
+                <span style={{
+                      padding: '6px 10px',
+                      borderRadius: '8px',
+                      fontFamily: 'monospace',
+                      fontSize: '24px',
+                      fontWeight: '600',
+                      color: '#4f46e5',
+                      backgroundColor: '#eef2ff',
+                      boxShadow: '0 1px 3px rgba(0, 0, 0, 0.1)'
+                    }}>
+                      {account.substring(0, 6)}...{account.substring(account.length - 4)}
+            </span>              
+</div>
               
               <button 
                 className="btn btn-secondary"
@@ -350,20 +365,22 @@ function App() {
                     Create New Proposal
                   </h2>
                   
-                  <input
-                    placeholder="Proposal Title"
-                    value={newTitle}
-                    onChange={(e) => setNewTitle(e.target.value)}
-                    className="form-input"
-                  />
-                  
-                  <textarea
-                    placeholder="Describe your proposal in detail..."
-                    value={newDescription}
-                    onChange={(e) => setNewDescription(e.target.value)}
-                    className="form-textarea"
-                  />
-                  
+                <input
+                  placeholder="Proposal Title"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  className="form-input"
+                  style={{ color: 'black' }} 
+                />
+
+                <textarea
+                  placeholder="Describe your proposal in detail..."
+                  value={newDescription}
+                  onChange={(e) => setNewDescription(e.target.value)}
+                  className="form-textarea"
+                  style={{ color: 'black' }} 
+                />
+
                   <button 
                     className="btn btn-primary"
                     onClick={createProposal}

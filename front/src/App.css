@@ -96,6 +96,7 @@ body {
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
+
 }
 
 /* Proposals grid - ממורכז */
@@ -146,7 +147,7 @@ body {
   max-width: 1200px;
   margin: 0 auto;
   text-align: center;
-  color: #64748b;
+  color: #000000;
   font-size: 1.1rem;
   width: 100%;
 }
@@ -239,11 +240,14 @@ body {
 .tab-header {
   display: flex;
   justify-content: center; /* ממרכז את הטאבים */
+
 }
 
 .tab-button {
   flex: 1;
   text-align: center;
+    margin:15px;
+
 }
 
 /* Ensure buttons are properly centered */
