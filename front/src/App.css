@@ -11,6 +11,7 @@ html, body, #root {
   display: flex;
   flex-direction: column;
   width: 100%;
+  color:#1e293b;
 }
 
 .header {
